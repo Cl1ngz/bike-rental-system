@@ -1,11 +1,14 @@
 package com.rental.service;
 
+import com.rental.exception.StationNotFoundException;
 import com.rental.exception.UserNotFoundException;
 import com.rental.model.Bike;
 import com.rental.model.Station;
 import com.rental.model.User;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BikeRentalSystem {
@@ -33,7 +36,27 @@ public class BikeRentalSystem {
     }
 
     // --- Station Management ---
-    // TODO: Implement methods for managing stations
+    public Station addStation(String stationId, String locationName, int capacity) {
+        if (stations.containsKey(stationId)) {
+            throw new IllegalArgumentException("Stacja o ID " + stationId + " już istnieje.");
+        }
+        Station newStation = new Station(stationId, locationName, capacity);
+        stations.put(stationId, newStation);
+        System.out.println("Dodano stację: " + newStation);
+        return newStation;
+    }
+
+    public Station findStation(String stationId) throws StationNotFoundException {
+        Station station = stations.get(stationId);
+        if (station == null) {
+            throw new StationNotFoundException("Nie znaleziono stacji o ID: " + stationId);
+        }
+        return station;
+    }
+
+    public List<Station> getAllStations() {
+        return new ArrayList<>(stations.values());
+    }
 
     // --- Bike Management ---
     // TODO: Implement methods for managing bikes
