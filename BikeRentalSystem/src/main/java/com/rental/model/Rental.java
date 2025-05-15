@@ -29,7 +29,12 @@ public class Rental {
     }
 
     public void endRental(Station endStation) {
-        // TODO: method for ending rental
+        if (this.endTime != null) {
+            throw new IllegalStateException("To wypożyczenie zostało już zakończone.");
+        }
+        this.endStation = endStation;
+        this.endTime = LocalDateTime.now();
+        this.duration = Duration.between(this.startTime, this.endTime);
     }
 
     public String getRentalId() {
@@ -64,6 +69,15 @@ public class Rental {
         return duration;
     }
 
-    // TODO: toString()
-
+    @Override
+    public String toString() {
+        return "Rental{" +
+                "rentalId='" + rentalId + '\'' +
+                ", userId=" + user.getUserId() +
+                ", bikeId=" + bike.getBikeId() +
+                ", startStation=" + startStation.getStationId() +
+                ", startTime=" + startTime +
+                (endTime != null ? ", endStation=" + endStation.getStationId() + ", endTime=" + endTime + ", duration=" + duration.toMinutes() + " mins" : ", status=ACTIVE") +
+                '}';
+    }
 }
