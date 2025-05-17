@@ -59,7 +59,34 @@ public class BikeRentalSystem {
     }
 
     // --- Bike Management ---
-    // TODO: Implement methods for managing bikes
+    public Bike addBike(String bikeId, String initialStationId) throws StationNotFoundException, StationFullException {
+        if (bikes.containsKey(bikeId)) {
+            throw new IllegalArgumentException("Rower o ID " + bikeId + " już istnieje.");
+        }
+        Station station = findStation(initialStationId);
+        if (station.isFull()) {
+            throw new StationFullException("Nie można dodać roweru, stacja " + initialStationId + " jest pełna.");
+        }
+
+        Bike newBike = new Bike(bikeId);
+        bikes.put(bikeId, newBike);
+        station.dockBike(newBike); // dockBike ustawi też currentStation w rowerze
+        System.out.println("Dodano rower: " + newBike + " do stacji " + station.getStationId());
+        return newBike;
+    }
+
+    public Bike findBike(String bikeId) throws BikeNotFoundException {
+        Bike bike = bikes.get(bikeId);
+        if (bike == null) {
+            throw new BikeNotFoundException("Nie znaleziono roweru o ID: " + bikeId);
+        }
+        return bike;
+    }
+
+    public List<Bike> getAvailableBikesAtStation(String stationId) throws StationNotFoundException {
+        Station station = findStation(stationId);
+        return station.getDockedBikes(); // Zwraca kopię listy rowerów na stacji
+    }
 
     // --- Rental Management ---
     public Rental rentBike(String userId,
