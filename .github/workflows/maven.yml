@@ -23,4 +23,4 @@ jobs:
 
       # 3) build & test
       - name: Build and test with Maven
-        run: mvn --batch-mode verify --file BikeRentalSystem/pom.xml
+        run: mvn --batch-mode verify --file ./BikeRentalSystem/pom.xml
