@@ -33,7 +33,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./BikeRentalSystem
-          file: Dockerfile
+          file: ./BikeRentalSystem/Dockerfile
           push: true                  # set to false if you only want to build, not push
           tags: |
             docker.io/${{ secrets.DO_USERNAME }}/bike-rental:${{ github.sha }}
