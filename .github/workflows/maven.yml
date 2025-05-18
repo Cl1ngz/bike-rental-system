@@ -1,0 +1,26 @@
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # 1) check out your code
+      - uses: actions/checkout@v4
+
+      # 2) install JDK 17, cache Maven deps
+      - name: Set up JDK 17 & cache Maven
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      # 3) build & test
+      - name: Build and test with Maven
+        run: mvn --batch-mode verify --file BikeRentalSystem/pom.xml
