@@ -1,0 +1,40 @@
+name: Docker Image CI
+
+# trigger on pushes or PRs to main
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1) check out your repo
+      - uses: actions/checkout@v4
+
+      # 2) set up Docker Buildx (for multi-arch / build caching, optional but recommended)
+      - uses: docker/setup-buildx-action@v2
+
+      # 3) log in to your registry
+      #    • Docker Hub: set secrets.DO_REGISTRY = docker.io, DO_USERNAME, DO_PASSWORD
+      #    • Or GitHub Packages: use registry=ghcr.io, username=github.actor, password=secrets.GITHUB_TOKEN
+      - name: Log in to registry
+        uses: docker/login-action@v2
+        with:
+          registry: docker.io             # or ghcr.io
+          username: ${{ secrets.DO_USERNAME }}     # Docker Hub user or github.actor for GHCR
+          password: ${{ secrets.DO_PASSWORD }}     # Docker Hub token or GITHUB_TOKEN for GHCR
+
+      # 4) build & push
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          push: true                  # set to false if you only want to build, not push
+          tags: |
+            docker.io/${{ secrets.DO_USERNAME }}/bike-rental:${{ github.sha }}
+            docker.io/${{ secrets.DO_USERNAME }}/bike-rental:latest
