@@ -90,7 +90,7 @@ public class BikeRentalSystem {
 
     // --- Rental Management ---
     public Rental rentBike(String userId,
-                           String stationId) throws UserNotFoundException, StationNotFoundException, NoBikesAvailableException, UserAlreadyRentingException {
+            String stationId) throws UserNotFoundException, StationNotFoundException, NoBikesAvailableException, UserAlreadyRentingException {
         User user = findUser(userId);
         Station station = findStation(stationId);
 
@@ -101,16 +101,15 @@ public class BikeRentalSystem {
             throw new NoBikesAvailableException("Brak dostępnych rowerów na stacji " + stationId);
         }
 
-        // Pobierz rower ze stacji
-        // Optional jest tu użyty dla bezpieczeństwa, chociaż sprawdziliśmy isEmpty()
+        // Take bike from station
+        // Optional for safety
         Bike bikeToRent = station.undockBike()
-                .orElseThrow(() -> new NoBikesAvailableException(
-                        "Wystąpił nieoczekiwany błąd - brak rowerów mimo wcześniejszego sprawdzenia."));
+                                 .orElseThrow(() -> new NoBikesAvailableException(
+                                         "Wystąpił nieoczekiwany błąd - brak rowerów mimo wcześniejszego sprawdzenia."));
 
-        // Utwórz nowy obiekt Rental
         Rental newRental = new Rental(user, bikeToRent, station);
 
-        // Zaktualizuj stan użytkownika
+        // new state
         user.startRental(newRental);
 
         System.out.println(
@@ -119,7 +118,7 @@ public class BikeRentalSystem {
     }
 
     public Rental returnBike(String bikeId,
-                             String stationId) throws BikeNotFoundException, StationNotFoundException, StationFullException, NotRentingException {
+            String stationId) throws BikeNotFoundException, StationNotFoundException, StationFullException, NotRentingException {
 
         Bike bike = findBike(bikeId); // check if exists
 
@@ -128,15 +127,11 @@ public class BikeRentalSystem {
             throw new NotRentingException("Rower " + bikeId + " nie jest aktualnie wypożyczony.");
         }
 
-        // Znajdź użytkownika, który wypożycza ten rower (przez Rental)
-        // Potrzebujemy sposobu na znalezienie aktywnego wypożyczenia dla danego roweru
-        // Można przeszukać wszystkich użytkowników lub trzymać mapę aktywnych wypożyczeń
-        User rentingUser = findUserRentingBike(bikeId); // Implementacja tej metody poniżej
+        User rentingUser = findUserRentingBike(bikeId);
 
-        // Znajdź stację docelową
+        // Ending station
         Station endStation = findStation(stationId);
 
-        // Sprawdź, czy stacja nie jest pełna (opcjonalne)
         if (endStation.isFull()) {
             throw new StationFullException("Stacja " + stationId + " jest pełna. Nie można zwrócić roweru.");
         }
@@ -161,7 +156,7 @@ public class BikeRentalSystem {
         return rentalToEnd;
     }
 
-    // Metoda pomocnicza do znalezienia użytkownika wypożyczającego dany rower
+    // Find user renting a specific bike
     private User findUserRentingBike(String bikeId) throws NotRentingException {
         for (User user : users.values()) {
             if (user.isRenting() && user.getCurrentRental().getBike().getBikeId().equals(bikeId)) {
@@ -171,7 +166,7 @@ public class BikeRentalSystem {
         throw new NotRentingException("Nie znaleziono użytkownika aktualnie wypożyczającego rower o ID: " + bikeId);
     }
 
-    // --- Pobieranie Historii ---
+    // --- History ---
     public List<Rental> getUserHistory(String userId) throws UserNotFoundException {
         User user = findUser(userId);
         return user.getRentalHistory();
