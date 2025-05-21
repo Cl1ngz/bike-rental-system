@@ -1,22 +1,126 @@
 package com.rental.ui;
 
+import com.rental.exception.*;
+import com.rental.service.BikeRentalSystem;
+
+import java.util.Scanner;
+
 public class Main {
+
+    private static BikeRentalSystem system = new BikeRentalSystem();
+    private static Scanner scanner = new Scanner(System.in);
+
     public static void main(String[] args) {
         initializeSystem();
-        System.out.println("Hello, World!");
+
+        boolean exit = false;
+        while (!exit) {
+            printMenu();
+            int choice = getUserChoice();
+
+            try {
+                switch (choice) {
+                    case 1:
+                        registerUser();
+                        break;
+                    case 2:
+                        viewStations();
+                        break;
+                    case 3:
+                        viewAvailableBikes();
+                        break;
+                    case 4:
+                        rentBike();
+                        break;
+                    case 5:
+                        returnBike();
+                        break;
+                    case 6:
+                        viewUserHistory();
+                        break;
+                    case 0:
+                        exit = true;
+                        break;
+                    default:
+                        System.out.println("Nieprawidłowy wybór.");
+                }
+            } catch (Exception e) {
+                System.err.println("Błąd: " + e.getMessage());
+            }
+            System.out.println("---");
+        }
+        System.out.println("Do widzenia!");
+        scanner.close();
     }
 
     private static void initializeSystem() {
-        // TODO: initialize system
+        try {
+            system.addStation("S1", "Centrum", 10);
+            system.addStation("S2", "Politechnika", 8);
+            system.addStation("S3", "Rynek", 12);
+
+            system.addBike("B001", "S1");
+            system.addBike("B002", "S1");
+            system.addBike("B003", "S1");
+            system.addBike("B004", "S2");
+            system.addBike("B005", "S2");
+            system.addBike("B006", "S3");
+
+            system.registerUser("U1", "Jan Kowalski");
+            system.registerUser("U2", "Anna Nowak");
+        } catch (Exception e) {
+            System.err.println("Błąd inicjalizacji systemu: " + e.getMessage());
+        }
+        System.out.println("\nSystem zainicjalizowany.\n");
     }
+
     private static void printMenu() {
-        // TODO: print menu
+        System.out.println("===== MENU WYPOŻYCZALNI ROWERÓW =====");
+        System.out.println("1. Zarejestruj nowego użytkownika");
+        System.out.println("2. Wyświetl stacje");
+        System.out.println("3. Wyświetl dostępne rowery na stacji");
+        System.out.println("4. Wypożycz rower");
+        System.out.println("5. Zwróć rower");
+        System.out.println("6. Wyświetl historię wypożyczeń użytkownika");
+        System.out.println("0. Wyjdź");
+        System.out.print("Wybierz opcję: ");
     }
+
     private static int getUserChoice() {
-        // TODO: get user choice
-        return -100;
+        while (!scanner.hasNextInt()) {
+            System.out.println("Proszę podać liczbę.");
+            scanner.next();
+            System.out.print("Wybierz opcję: ");
+        }
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+        return choice;
     }
+
     private static void registerUser() {
-        // TODO: register user
+        System.out.print("Podaj ID użytkownika: ");
+        String userId = scanner.nextLine();
+        System.out.print("Podaj imię i nazwisko: ");
+        String name = scanner.nextLine();
+        try {
+            system.registerUser(userId, name);
+        } catch (IllegalArgumentException e) {
+            System.err.println("Błąd rejestracji: " + e.getMessage());
+        }
+    }
+
+    private static void viewStations() {
+    }
+
+    private static void viewAvailableBikes() throws StationNotFoundException {
+    }
+
+    private static void rentBike() throws UserNotFoundException, StationNotFoundException, NoBikesAvailableException, UserAlreadyRentingException {
+    }
+
+    private static void returnBike() throws BikeNotFoundException, StationNotFoundException, StationFullException, NotRentingException {
+    }
+
+    private static void viewUserHistory() throws UserNotFoundException {
     }
 }
