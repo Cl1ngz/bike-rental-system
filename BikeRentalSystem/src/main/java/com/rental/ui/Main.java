@@ -1,8 +1,13 @@
 package com.rental.ui;
 
 import com.rental.exception.*;
+import com.rental.model.Bike;
+import com.rental.model.Rental;
+import com.rental.model.Station;
+import com.rental.model.User;
 import com.rental.service.BikeRentalSystem;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -20,29 +25,30 @@ public class Main {
 
             try {
                 switch (choice) {
-                    case 1:
+                    case 1 -> {
                         registerUser();
-                        break;
-                    case 2:
+                    }
+                    case 2 -> {
                         viewStations();
-                        break;
-                    case 3:
+                    }
+                    case 3 -> {
                         viewAvailableBikes();
-                        break;
-                    case 4:
+                    }
+                    case 4 -> {
                         rentBike();
-                        break;
-                    case 5:
+                    }
+                    case 5 -> {
                         returnBike();
-                        break;
-                    case 6:
+                    }
+                    case 6 -> {
                         viewUserHistory();
-                        break;
-                    case 0:
+                    }
+                    case 0 -> {
                         exit = true;
-                        break;
-                    default:
+                    }
+                    default -> {
                         System.out.println("Nieprawidłowy wybór.");
+                    }
                 }
             } catch (Exception e) {
                 System.err.println("Błąd: " + e.getMessage());
@@ -110,17 +116,64 @@ public class Main {
     }
 
     private static void viewStations() {
+        System.out.println("\n--- Lista Stacji ---");
+        List<Station> stations = system.getAllStations();
+        if (stations.isEmpty()) {
+            System.out.println("Brak stacji w systemie.");
+        } else {
+            stations.forEach(station ->
+                    System.out.printf("ID: %s, Nazwa: %s, Dostępne rowery: %d, Wolne miejsca: %d / %d%n",
+                            station.getStationId(), station.getLocationName(),
+                            station.getAvailableBikeCount(), station.getAvailableSpots(), station.getCapacity())
+            );
+        }
     }
 
     private static void viewAvailableBikes() throws StationNotFoundException {
+        System.out.print("Podaj ID stacji: ");
+        String stationId = scanner.nextLine();
+        List<Bike> bikes = system.getAvailableBikesAtStation(stationId);
+        System.out.println("\n--- Dostępne rowery na stacji " + stationId + " ---");
+        if (bikes.isEmpty()) {
+            System.out.println("Brak dostępnych rowerów.");
+        } else {
+            bikes.forEach(System.out::println);
+        }
     }
 
     private static void rentBike() throws UserNotFoundException, StationNotFoundException, NoBikesAvailableException, UserAlreadyRentingException {
+        System.out.print("Podaj swoje ID użytkownika: ");
+        String userId = scanner.nextLine();
+        System.out.print("Podaj ID stacji, z której chcesz wypożyczyć rower: ");
+        String stationId = scanner.nextLine();
+        Rental rental = system.rentBike(userId, stationId);
+        System.out.println("Wypożyczono rower! Szczegóły wypożyczenia: " + rental.getRentalId());
     }
 
     private static void returnBike() throws BikeNotFoundException, StationNotFoundException, StationFullException, NotRentingException {
+        System.out.print("Podaj ID roweru, który zwracasz: ");
+        String bikeId = scanner.nextLine();
+        System.out.print("Podaj ID stacji, na którą zwracasz rower: ");
+        String stationId = scanner.nextLine();
+        Rental completedRental = system.returnBike(bikeId, stationId);
+        System.out.println("Rower zwrócony pomyślnie.");
+        System.out.println("Podsumowanie wypożyczenia: " + completedRental);
     }
 
     private static void viewUserHistory() throws UserNotFoundException {
+        System.out.print("Podaj ID użytkownika, którego historię chcesz zobaczyć: ");
+        String userId = scanner.nextLine();
+        List<Rental> history = system.getUserHistory(userId);
+        System.out.println("\n--- Historia wypożyczeń użytkownika " + userId + " ---");
+        if (history.isEmpty()) {
+            System.out.println("Brak historii wypożyczeń.");
+        } else {
+            history.forEach(System.out::println);
+        }
+
+        User user = system.findUser(userId);
+        if (user.isRenting()) {
+            System.out.println("Aktywne wypożyczenie: " + user.getCurrentRental());
+        }
     }
 }
