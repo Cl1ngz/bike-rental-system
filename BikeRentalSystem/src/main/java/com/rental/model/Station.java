@@ -5,6 +5,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Reprezentuje stację rowerową o określonym identyfikatorze,
+ * nazwie lokalizacji oraz pojemności. Umożliwia zadokowanie
+ * i wypożyczenie rowerów.
+ */
 public class Station {
     private String stationId;
     private String locationName;
@@ -42,7 +47,11 @@ public class Station {
         return capacity - dockedBikes.size();
     }
 
-    // Metody zarządzania rowerami
+    /**
+     * Sprawdza, czy stacja jest pełna (brak wolnych miejsc).
+     *
+     * @return {@code true} jeśli liczba rowerów ≥ pojemność
+     */
     public boolean isFull() {
         return dockedBikes.size() >= capacity;
     }
@@ -54,8 +63,9 @@ public class Station {
     /**
      * Dodaje rower do stacji.
      *
-     * @param bike Rower do dodania.
-     * @throws IllegalStateException jeśli stacja jest pełna lub rower jest już na innej stacji.
+     * @param bike obiekt roweru do zadokowania
+     * @throws IllegalStateException jeśli stacja jest pełna
+     *                               lub rower jest już zadokowany w innej stacji
      */
     public void dockBike(Bike bike) {
         if (isFull()) {
@@ -72,9 +82,10 @@ public class Station {
     }
 
     /**
-     * Usuwa dostępny rower ze stacji (np. w celu wypożyczenia).
+     * Usuwa pierwszy dostępny rower ze stacji i zwraca go.
      *
-     * @return Optional z usuniętym rowerem lub pusty Optional, jeśli stacja jest pusta.
+     * @return {@code Optional} z usuniętym rowerem lub pusty
+     * jeśli na stacji nie ma rowerów
      */
     public Optional<Bike> undockBike() {
         if (isEmpty()) {
