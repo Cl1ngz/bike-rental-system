@@ -4,6 +4,11 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * Reprezentuje proces wypożyczenia roweru przez użytkownika,
+ * zawiera informacje o stacji początkowej, stacji końcowej
+ * oraz czasie trwania wypożyczenia.
+ */
 public class Rental {
     private String rentalId;
     private User user;
@@ -28,6 +33,14 @@ public class Rental {
         this.duration = null;
     }
 
+    /**
+     * Kończy bieżące wypożyczenie, ustawia stację zwrotu,
+     * czas zakończenia oraz oblicza jego czas trwania.
+     *
+     * @param endStation stacja, na której rower jest zwracany
+     * @throws IllegalStateException jeśli wypożyczenie zostało
+     *         już wcześniej zakończone
+     */
     public void endRental(Station endStation) {
         if (this.endTime != null) {
             throw new IllegalStateException("To wypożyczenie zostało już zakończone.");

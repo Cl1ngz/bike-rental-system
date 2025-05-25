@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Reprezentuje użytkownika systemu wypożyczalni rowerów,
+ * przechowuje jego identyfikator, imię, historię wypożyczeń
+ * oraz informację o bieżącym wypożyczeniu.
+ */
 public class User {
     private String userId;
     private String name;
@@ -33,10 +38,22 @@ public class User {
         return currentRental;
     }
 
+    /**
+     * Sprawdza, czy użytkownik aktualnie wypożycza rower.
+     *
+     * @return {@code true} jeśli istnieje aktywne wypożyczenie
+     */
     public boolean isRenting() {
         return currentRental != null;
     }
 
+    /**
+     * Rozpoczyna nowe wypożyczenie dla użytkownika.
+     *
+     * @param rental obiekt wypożyczenia do rozpoczęcia
+     * @throws IllegalStateException jeśli użytkownik ma już
+     *         aktywne wypożyczenie
+     */
     public void startRental(Rental rental) {
         if (isRenting()) {
             throw new IllegalStateException("Użytkownik już wypożycza rower.");
@@ -44,6 +61,13 @@ public class User {
         this.currentRental = rental;
     }
 
+    /**
+     * Kończy bieżące wypożyczenie użytkownika, dodaje je do historii
+     * i zeruje stan bieżącego wypożyczenia.
+     *
+     * @throws IllegalStateException jeśli użytkownik nie ma
+     *         aktywnego wypożyczenia
+     */
     public void endRental() {
         if (!isRenting()) {
             throw new IllegalStateException("Użytkownik nie ma aktywnego wypożyczenia.");

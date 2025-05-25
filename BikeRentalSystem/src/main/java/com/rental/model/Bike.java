@@ -2,6 +2,11 @@ package com.rental.model;
 
 import java.util.Objects;
 
+/**
+ * Reprezentuje pojedynczy rower w systemie, identyfikowany
+ * unikalnym identyfikatorem, z informacją o dostępności
+ * oraz o aktualnej stacji (lub braku stacji, gdy jest wypożyczony).
+ */
 public class Bike {
     private String bikeId;
     private boolean isAvailable;
