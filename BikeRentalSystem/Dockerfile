@@ -1,24 +1,9 @@
-# Stage 1: build
-FROM openjdk:17-slim AS builder
-
-# Set working dir
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
-
-# Copy all source files
 COPY . .
+RUN mvn clean package -DskipTests
 
-# Compile all .java files into .class files
-# This assumes your .java files declare their packages (exception, model, service, ui)
-RUN find . -name "*.java" > sources.txt \
- && javac @sources.txt
-
-# Stage 2: runtime
 FROM openjdk:17-slim
-
 WORKDIR /app
-
-# Copy compiled classes from builder
-COPY --from=builder /app .
-
-# Default command: run your Main class
-CMD ["java", "com.rental.ui.Main"]
+COPY --from=build /app/target/*.jar app.jar
+CMD ["java", "-jar", "app.jar"]
