@@ -86,13 +86,22 @@ docker --version
 2. **Zbuduj obraz Docker:**
 
    ```bash
-   docker build -t bike-rental-system .
+   docker build -t bike-rental .
    ```
 
 3. **Uruchom kontener:**
    ```bash
-   docker run -it bike-rental-system
+   docker run -it bike-rental
    ```
+
+## Uruchomienie przez Docker Hub
+
+Jeśli nie chcesz budować obrazu lokalnie, możesz pobrać i uruchomić gotowy obraz z Docker Hub:
+
+```bash
+docker pull cl1ngz/bike-rental:latest
+docker run -p 8080:8080 cl1ngz/bike-rental:latest
+```
 
 ## Jak działa aplikacja
 
