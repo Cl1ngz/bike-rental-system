@@ -76,10 +76,10 @@ docker --version
 
 ### Za pomocą Dockera
 
-1. **Sklonuj repozytorium (jeśli jeszcze tego nie zrobiłeś):**
+1. **Sklonuj repozytorium:**
 
    ```bash
-   git clone <URL_REPOZYTORIUM>
+   git clone https://github.com/Cl1ngz/bike-rental-system.git
    cd BikeRentalSystem
    ```
 
