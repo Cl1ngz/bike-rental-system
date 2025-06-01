@@ -21,4 +21,4 @@ WORKDIR /app
 COPY --from=builder /app .
 
 # Default command: run your Main class
-CMD ["java", "ui.Main"]
+CMD ["java", "com.rental.ui.Main"]
