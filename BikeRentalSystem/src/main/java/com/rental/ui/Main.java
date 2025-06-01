@@ -88,7 +88,7 @@ public class Main {
 
     private static void registerUser() {
         System.out.println(
-                "INFORMACIA: Id działa na zasadzie pseudonimu którego będziesz używać do wypożyczenia roweru.");
+                "INFORMACJA: Id działa na zasadzie pseudonimu którego będziesz używać do wypożyczenia roweru.");
         System.out.print("Podaj ID użytkownika: ");
         String userId = scanner.nextLine();
         System.out.print("Podaj imię i nazwisko: ");
