@@ -17,7 +17,7 @@ public class Station {
     private List<Bike> dockedBikes;
 
     public Station(String stationId, String locationName, int capacity) {
-        this.stationId = stationId;
+        this.stationId = stationId.toUpperCase();
         this.locationName = locationName;
         this.capacity = capacity;
         this.dockedBikes = new ArrayList<>();

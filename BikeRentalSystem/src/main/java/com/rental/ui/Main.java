@@ -11,9 +11,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-
-    private static BikeRentalSystem system = new BikeRentalSystem();
-    private static Scanner scanner = new Scanner(System.in);
+    private static final BikeRentalSystem system = new BikeRentalSystem();
+    private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         initializeSystem();
@@ -25,30 +24,14 @@ public class Main {
 
             try {
                 switch (choice) {
-                    case 1 -> {
-                        registerUser();
-                    }
-                    case 2 -> {
-                        viewStations();
-                    }
-                    case 3 -> {
-                        viewAvailableBikes();
-                    }
-                    case 4 -> {
-                        rentBike();
-                    }
-                    case 5 -> {
-                        returnBike();
-                    }
-                    case 6 -> {
-                        viewUserHistory();
-                    }
-                    case 0 -> {
-                        exit = true;
-                    }
-                    default -> {
-                        System.out.println("Nieprawidłowy wybór.");
-                    }
+                    case 1 -> registerUser();
+                    case 2 -> viewStations();
+                    case 3 -> viewAvailableBikes();
+                    case 4 -> rentBike();
+                    case 5 -> returnBike();
+                    case 6 -> viewUserHistory();
+                    case 0 -> exit = true;
+                    default -> System.out.println("Nieprawidłowy wybór.");
                 }
             } catch (Exception e) {
                 System.err.println("Błąd: " + e.getMessage());
@@ -104,6 +87,8 @@ public class Main {
     }
 
     private static void registerUser() {
+        System.out.println(
+                "INFORMACIA: Id działa na zasadzie pseudonimu którego będziesz używać do wypożyczenia roweru.");
         System.out.print("Podaj ID użytkownika: ");
         String userId = scanner.nextLine();
         System.out.print("Podaj imię i nazwisko: ");
@@ -132,7 +117,7 @@ public class Main {
     private static void viewAvailableBikes() throws StationNotFoundException {
         System.out.print("Podaj ID stacji: ");
         String stationId = scanner.nextLine();
-        List<Bike> bikes = system.getAvailableBikesAtStation(stationId);
+        List<Bike> bikes = system.getAvailableBikesAtStation(stationId.toUpperCase());
         System.out.println("\n--- Dostępne rowery na stacji " + stationId + " ---");
         if (bikes.isEmpty()) {
             System.out.println("Brak dostępnych rowerów.");

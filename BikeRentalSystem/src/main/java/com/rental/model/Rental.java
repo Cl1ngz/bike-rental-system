@@ -2,6 +2,7 @@ package com.rental.model;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 /**
@@ -39,7 +40,7 @@ public class Rental {
      *
      * @param endStation stacja, na której rower jest zwracany
      * @throws IllegalStateException jeśli wypożyczenie zostało
-     *         już wcześniej zakończone
+     *                               już wcześniej zakończone
      */
     public void endRental(Station endStation) {
         if (this.endTime != null) {
@@ -89,8 +90,10 @@ public class Rental {
                 ", userId=" + user.getUserId() +
                 ", bikeId=" + bike.getBikeId() +
                 ", startStation=" + startStation.getStationId() +
-                ", startTime=" + startTime +
-                (endTime != null ? ", endStation=" + endStation.getStationId() + ", endTime=" + endTime + ", duration=" + duration.toMinutes() + " mins" : ", status=ACTIVE") +
+                ", startTime=" + startTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) +
+                (endTime != null ? ", endStation=" + endStation.getStationId() + ", endTime=" + endTime.format(
+                        DateTimeFormatter.ofPattern(
+                                "yyyy-MM-dd HH:mm")) + ", duration=" + duration.toMinutes() + " mins" : ", status=ACTIVE") +
                 '}';
     }
 }

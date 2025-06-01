@@ -31,7 +31,6 @@ public class BikeRentalSystem {
      * @return       utworzony obiekt User
      * @throws IllegalArgumentException jeśli użytkownik o podanym ID już istnieje
      */
-
     public User registerUser(String userId, String name) {
         if (users.containsKey(userId)) {
             throw new IllegalArgumentException("Użytkownik o ID " + userId + " już istnieje.");
