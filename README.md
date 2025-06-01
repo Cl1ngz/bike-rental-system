@@ -100,7 +100,7 @@ Jeśli nie chcesz budować obrazu lokalnie, możesz pobrać i uruchomić gotowy 
 
 ```bash
 docker pull cl1ngz/bike-rental:latest
-docker run -p 8080:8080 cl1ngz/bike-rental:latest
+docker run -it -p 8080:8080 cl1ngz/bike-rental:latest
 ```
 
 ## Jak działa aplikacja
