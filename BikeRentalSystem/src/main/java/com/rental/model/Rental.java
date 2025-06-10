@@ -86,14 +86,13 @@ public class Rental {
     @Override
     public String toString() {
         return "Rental{" +
-                "rentalId='" + rentalId + '\'' +
-                ", userId=" + user.getUserId() +
-                ", bikeId=" + bike.getBikeId() +
-                ", startStation=" + startStation.getStationId() +
-                ", startTime=" + startTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) +
-                (endTime != null ? ", endStation=" + endStation.getStationId() + ", endTime=" + endTime.format(
+                ", Id Użytkownika:" + user.getUserId() +
+                ", rower:" + bike.getBikeId() +
+                ", stacja początkowa:" + startStation.getStationId() +
+                ", start wyporzyczenia:" + startTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")) +
+                (endTime != null ? ", stacja końcowa:" + endStation.getStationId() + ", koniec wyporzyczenia=" + endTime.format(
                         DateTimeFormatter.ofPattern(
-                                "yyyy-MM-dd HH:mm")) + ", duration=" + duration.toMinutes() + " mins" : ", status=ACTIVE") +
+                                "yyyy-MM-dd HH:mm")) + ", czas trwania wyporyczenia=" + duration.toMinutes() + " minut" : ", status: Aktywne") +
                 '}';
     }
 }

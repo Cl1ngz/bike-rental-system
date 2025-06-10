@@ -53,10 +53,10 @@ public class Bike {
 
     @Override
     public String toString() {
-        return "Bike{" +
-                "bikeId='" + bikeId + '\'' +
-                ", isAvailable=" + isAvailable +
-                ", stationId=" + (currentStation != null ? currentStation.getStationId() : "none") +
+        return "Rower{" +
+                "bikeId='" + bikeId + '\'' + " Status = " +
+                (isAvailable ? "Dostępny" : "Niedostępny") +
+                ", Id stacji=" + (currentStation != null ? currentStation.getStationId() : "none") +
                 '}';
     }
 }
