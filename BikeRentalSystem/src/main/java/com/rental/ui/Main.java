@@ -1,3 +1,4 @@
+
 package com.rental.ui;
 
 import com.rental.exception.*;
@@ -131,8 +132,8 @@ public class Main {
         String userId = scanner.nextLine();
         System.out.print("Podaj ID stacji, z której chcesz wypożyczyć rower: ");
         String stationId = scanner.nextLine();
-        Rental rental = system.rentBike(userId, stationId);
-        System.out.println("Wypożyczono rower! Szczegóły wypożyczenia: " + rental.getRentalId());
+        var temp = system.rentBike(userId, stationId.toUpperCase());
+        System.out.println("Wypożyczono rower(" + temp.getBike().getBikeId() + ")! ");
     }
 
     private static void returnBike() throws BikeNotFoundException, StationNotFoundException, StationFullException, NotRentingException {
@@ -140,7 +141,7 @@ public class Main {
         String bikeId = scanner.nextLine();
         System.out.print("Podaj ID stacji, na którą zwracasz rower: ");
         String stationId = scanner.nextLine();
-        Rental completedRental = system.returnBike(bikeId, stationId);
+        Rental completedRental = system.returnBike(bikeId, stationId.toUpperCase());
         System.out.println("Rower zwrócony pomyślnie.");
         System.out.println("Podsumowanie wypożyczenia: " + completedRental);
     }

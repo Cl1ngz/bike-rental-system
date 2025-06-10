@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Reprezentuje system wypożyczalni rowerów,
@@ -17,6 +18,14 @@ import java.util.Map;
  * oraz procesami wypożyczeń i zwrotów.
  */
 public class BikeRentalSystem {
+    private Logger logger = Logger.getLogger(BikeRentalSystem.class.getName());
+
+    {
+        //Disable logger
+        logger.setLevel(java.util.logging.Level.OFF);
+    }
+
+    ;
     private Map<String, User> users = new HashMap<>();
     private Map<String, Station> stations = new HashMap<>();
     private Map<String, Bike> bikes = new HashMap<>();
@@ -28,7 +37,7 @@ public class BikeRentalSystem {
      *
      * @param userId unikalny identyfikator użytkownika
      * @param name   imię i nazwisko użytkownika
-     * @return       utworzony obiekt User
+     * @return utworzony obiekt User
      * @throws IllegalArgumentException jeśli użytkownik o podanym ID już istnieje
      */
     public User registerUser(String userId, String name) {
@@ -45,7 +54,7 @@ public class BikeRentalSystem {
      * Wyszukuje użytkownika po identyfikatorze.
      *
      * @param userId identyfikator użytkownika
-     * @return       obiekt User o podanym ID
+     * @return obiekt User o podanym ID
      * @throws UserNotFoundException jeśli nie znaleziono użytkownika
      */
     public User findUser(String userId) throws UserNotFoundException {
@@ -64,7 +73,7 @@ public class BikeRentalSystem {
      * @param stationId    unikalny identyfikator stacji
      * @param locationName nazwa lub opis lokalizacji stacji
      * @param capacity     maksymalna liczba rowerów, które może pomieścić stacja
-     * @return             utworzony obiekt Station
+     * @return utworzony obiekt Station
      * @throws IllegalArgumentException jeśli stacja o podanym ID już istnieje
      */
     public Station addStation(String stationId, String locationName, int capacity) {
@@ -96,7 +105,7 @@ public class BikeRentalSystem {
      *
      * @param bikeId           unikalny identyfikator roweru
      * @param initialStationId identyfikator stacji, na której rower ma się pojawić
-     * @return                 utworzony obiekt Bike
+     * @return utworzony obiekt Bike
      * @throws StationNotFoundException jeśli nie istnieje stacja o podanym ID
      * @throws StationFullException     jeśli stacja jest pełna
      * @throws IllegalArgumentException jeśli rower o podanym ID już istnieje
@@ -137,14 +146,14 @@ public class BikeRentalSystem {
      *
      * @param userId    identyfikator użytkownika
      * @param stationId identyfikator stacji, z której pobierany jest rower
-     * @return          utworzony obiekt Rental reprezentujący wypożyczenie
-     * @throws UserNotFoundException        jeśli nie znaleziono użytkownika
-     * @throws StationNotFoundException     jeśli nie znaleziono stacji
-     * @throws UserAlreadyRentingException  jeśli użytkownik już ma aktywne wypożyczenie
-     * @throws NoBikesAvailableException    jeśli na stacji brak dostępnych rowerów
+     * @return utworzony obiekt Rental reprezentujący wypożyczenie
+     * @throws UserNotFoundException       jeśli nie znaleziono użytkownika
+     * @throws StationNotFoundException    jeśli nie znaleziono stacji
+     * @throws UserAlreadyRentingException jeśli użytkownik już ma aktywne wypożyczenie
+     * @throws NoBikesAvailableException   jeśli na stacji brak dostępnych rowerów
      */
     public Rental rentBike(String userId,
-                           String stationId) throws UserNotFoundException, StationNotFoundException, NoBikesAvailableException, UserAlreadyRentingException {
+            String stationId) throws UserNotFoundException, StationNotFoundException, NoBikesAvailableException, UserAlreadyRentingException {
         User user = findUser(userId);
         Station station = findStation(stationId);
 
@@ -158,16 +167,15 @@ public class BikeRentalSystem {
         // Take bike from station
         // Optional for safety
         Bike bikeToRent = station.undockBike()
-                .orElseThrow(() -> new NoBikesAvailableException(
-                        "Wystąpił nieoczekiwany błąd - brak rowerów mimo wcześniejszego sprawdzenia."));
+                                 .orElseThrow(() -> new NoBikesAvailableException(
+                                         "Wystąpił nieoczekiwany błąd - brak rowerów mimo wcześniejszego sprawdzenia."));
 
         Rental newRental = new Rental(user, bikeToRent, station);
 
         // new state
         user.startRental(newRental);
-
-        System.out.println(
-                "Użytkownik " + userId + " wypożyczył rower " + bikeToRent.getBikeId() + " ze stacji " + stationId);
+        logger.info("Użytkownik " + userId + " wypożyczył rower "
+                + bikeToRent.getBikeId() + " ze stacji " + stationId);
         return newRental;
     }
 
@@ -176,14 +184,14 @@ public class BikeRentalSystem {
      *
      * @param bikeId    identyfikator zwracanego roweru
      * @param stationId identyfikator stacji, na którą zwracany jest rower
-     * @return          obiekt Rental z zakończonym wypożyczeniem
-     * @throws BikeNotFoundException       jeśli nie znaleziono roweru
-     * @throws StationNotFoundException    jeśli nie znaleziono stacji
-     * @throws StationFullException        jeśli stacja jest pełna
-     * @throws NotRentingException         jeśli rower nie był wypożyczony
+     * @return obiekt Rental z zakończonym wypożyczeniem
+     * @throws BikeNotFoundException    jeśli nie znaleziono roweru
+     * @throws StationNotFoundException jeśli nie znaleziono stacji
+     * @throws StationFullException     jeśli stacja jest pełna
+     * @throws NotRentingException      jeśli rower nie był wypożyczony
      */
     public Rental returnBike(String bikeId,
-                             String stationId) throws BikeNotFoundException, StationNotFoundException, StationFullException, NotRentingException {
+            String stationId) throws BikeNotFoundException, StationNotFoundException, StationFullException, NotRentingException {
 
         Bike bike = findBike(bikeId); // check if exists
 
@@ -214,7 +222,7 @@ public class BikeRentalSystem {
         // update userstate (end rental)
         rentingUser.endRental();
 
-        System.out.println(
+        logger.info(
                 "Rower " + bikeId + " zwrócony na stację " + stationId + " przez użytkownika " + rentingUser.getUserId());
         System.out.println("Czas wypożyczenia: " + rentalToEnd.getDuration().toMinutes() + " minut.");
 
